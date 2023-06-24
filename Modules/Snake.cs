@@ -1,4 +1,4 @@
-﻿using Snake.Model;
+﻿using SnakeGame.Enum;
 using SnakeGame.Model;
 using System;
 using System.Collections.Generic;
@@ -8,21 +8,22 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace SnakeGame
+namespace SnakeGame.Modules
 {
     internal class Snake
     {
-        private List<SnakeElement> _elements;
-        private Canvas _canvas;
+        private readonly List<SnakeElement> _elements;
+        private readonly Canvas _canvas;
+
         private MoveDirection _direction;
 
         public Point HeadPosition => _elements[0].Position;
         public List<Point> PositionCollection { get; set; }
         public bool IsDead { get; set; }
 
-        public event EventHandler<SnakeMovedEventArgs> Moved;
-        public event EventHandler Died;
-        public event EventHandler Increased;
+        public event EventHandler<SnakeMovedEventArgs>? Moved;
+        public event EventHandler? Died;
+        public event EventHandler? Increased;
 
         public Snake(Point position, int length, Canvas canvas)
         {
@@ -46,11 +47,12 @@ namespace SnakeGame
 
         private Rectangle InitializeElement(int number)
         {
-            Rectangle rectangle = new();
-
-            rectangle.Width = MainWindow.CellWidth;
-            rectangle.Height = MainWindow.CellWidth;
-            rectangle.Fill = new SolidColorBrush(Color.FromArgb((byte)(255 - number * 2), 0, 0, 0));
+            Rectangle rectangle = new()
+            {
+                Width = MainWindow.CellWidth,
+                Height = MainWindow.CellWidth,
+                Fill = new SolidColorBrush(Color.FromArgb((byte)(255 - number * 2), 0, 0, 0))
+            };
 
             _canvas.Children.Add(rectangle);
 
@@ -127,7 +129,7 @@ namespace SnakeGame
         {
             Point nextPos = GetNextPosition(HeadPosition);
 
-            bool isInsideBoundes = _direction switch
+            bool isInsideBounds = _direction switch
             {
                 MoveDirection.Left => nextPos.X >= 0,
                 MoveDirection.Top => nextPos.Y >= 0,
@@ -136,7 +138,7 @@ namespace SnakeGame
                 _ => true,
             };
 
-            if (!isInsideBoundes)
+            if (!isInsideBounds)
             {
                 return false;
             }

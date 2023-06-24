@@ -1,5 +1,4 @@
-﻿
-namespace SnakeGame.Model
+﻿namespace SnakeGame.Enum
 {
     internal enum MoveDirection
     {

@@ -1,5 +1,6 @@
-﻿using Snake.Model;
+﻿using SnakeGame.Enum;
 using SnakeGame.Model;
+using SnakeGame.Modules;
 using System;
 using System.IO;
 using System.Timers;
@@ -16,13 +17,14 @@ namespace SnakeGame
         public const int HorizontalLength = HorizontalCellNumber * CellWidth;
         public const int VerticalLength = VerticalCellNumber * CellWidth;
         public const int StartSpeed = 500;
+
         private const string FileName = "BestScore.txt";
 
         private Point _startPos;
         private int _startLength;
-        private Snake _snake;
-        private Apple _apple;
-        private Timer _movingTimer;
+        private Snake? _snake;
+        private Apple? _apple;
+        private Timer? _movingTimer;
         private bool _gameStarted;
         private int _points;
 
@@ -63,11 +65,14 @@ namespace SnakeGame
         {
             _gameStarted = false;
 
-            _snake.Moved -= OnSnakeMoved;
-            _snake.Died -= OnSnakeDied;
-            _snake.Increased -= OnSnakeIncreased;
+            if (_snake is not null)
+            {
+                _snake.Moved -= OnSnakeMoved;
+                _snake.Died -= OnSnakeDied;
+                _snake.Increased -= OnSnakeIncreased;
+            }
 
-            _movingTimer.Stop();
+            _movingTimer?.Stop();
 
             if (_points > int.Parse(best.Text))
             {
@@ -98,7 +103,7 @@ namespace SnakeGame
             _movingTimer.Start();
         }
 
-        private void TimerTicked(object? sender, ElapsedEventArgs e) => Dispatcher.Invoke(() => _snake.Move());
+        private void TimerTicked(object? sender, ElapsedEventArgs e) => Dispatcher.Invoke(() => _snake?.Move());
 
         private void RenderSnake()
         {
@@ -116,7 +121,7 @@ namespace SnakeGame
             _apple = new Apple();
 
             canvas.Children.Add(_apple.Circle);
-            _apple.Spawn(_snake.PositionCollection);
+            _apple.Spawn(_snake!.PositionCollection);
         }
 
         private void OnSnakeIncreased(object? sender, EventArgs e)
@@ -124,7 +129,8 @@ namespace SnakeGame
             _points++;
             current.Text = _points.ToString();
 
-            _movingTimer.Interval -= 5;
+            if (_movingTimer is not null)
+                _movingTimer.Interval -= 5;
         }
 
         private void OnSnakeDied(object? sender, EventArgs e) => Stop();
@@ -133,7 +139,7 @@ namespace SnakeGame
         {
             Dispatcher.Invoke(() =>
             {
-                if (_snake.HeadPosition == _apple.Position)
+                if (_snake is not null && _apple is not null && _snake.HeadPosition == _apple.Position)
                 {
                     _snake.Increase();
                     _apple.Spawn(_snake.PositionCollection);
@@ -166,10 +172,10 @@ namespace SnakeGame
                     return;
             }
 
-            if (_gameStarted && _snake.Turn(direction))
+            if (_gameStarted && _snake!.Turn(direction))
             {
-                _movingTimer.Stop();
-                _movingTimer.Start();
+                _movingTimer?.Stop();
+                _movingTimer?.Start();
             }
         }
 

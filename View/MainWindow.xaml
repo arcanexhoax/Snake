@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
         Title="Snake Game"
-        Icon="Resources/snake.ico"
+        Icon="/Resources/snake.ico"
         KeyDown="OnKeyDown" 
         Loaded="OnWindowLoaded">
     <Border Padding="50 20 50 50">

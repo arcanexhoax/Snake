@@ -6,12 +6,13 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace SnakeGame
+namespace SnakeGame.Modules
 {
     internal class Apple
     {
-        private Random _random;
-        private List<Point> _probablyPoints;
+        private readonly Random _random;
+
+        private List<Point>? _probablyPoints;
 
         public Ellipse Circle { get; set; }
         public Point Position { get; set; }
